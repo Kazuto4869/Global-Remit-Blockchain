@@ -131,14 +131,7 @@ PostgreSQL   backend/.secrets/        Stellar SDK --> Horizon Testnet
 ```text
 .
 ├── README.md
-├── PROJECT_PROGRESS.md              # tiến độ và kết quả từng phase
-├── GlobalRemit_Codex_7_Phases.md    # đặc tả 7 phase của project
 ├── docker-compose.yml               # PostgreSQL 17, cổng host 55432
-├── .agents/
-│   └── skills/
-│       ├── SKILL.md                 # skill thiết kế giao diện
-│       ├── references/DESIGN.md     # design system warm-editorial
-│       └── writing-paper/           # skill viết báo cáo
 ├── database/
 │   └── schema.sql                   # 5 bảng PostgreSQL
 ├── backend/
@@ -162,18 +155,14 @@ PostgreSQL   backend/.secrets/        Stellar SDK --> Horizon Testnet
 │   │       ├── stellarPayments.js   # asset, trustline, reserve, payment
 │   │       └── stellarTransactions.js # ký/gửi giao dịch idempotent
 │   └── test/                        # health, phase2, stellarFunding
-├── frontend/
-│   ├── vite.config.js               # proxy /api -> Express
-│   └── src/
-│       ├── main.jsx, App.jsx        # khung ứng dụng, trạng thái kết nối
-│       ├── api.js                   # wrapper fetch + JWT
-│       ├── index.css                # style theo design system
-│       ├── components/ui.jsx        # thành phần UI dùng chung
-│       └── pages/                   # Auth, Kyc, TestnetTransfer, Dashboard, Admin
-└── docs/
-    ├── evidence.md                  # test matrix, ảnh, hash Explorer
-    ├── evidence-images/
-    └── report-outline.md            # đề cương báo cáo
+└── frontend/
+    ├── vite.config.js               # proxy /api -> Express
+    └── src/
+        ├── main.jsx, App.jsx        # khung ứng dụng, trạng thái kết nối
+        ├── api.js                   # wrapper fetch + JWT
+        ├── index.css                # style theo design system
+        ├── components/ui.jsx        # thành phần UI dùng chung
+        └── pages/                   # Auth, Kyc, TestnetTransfer, Dashboard, Admin
 ```
 
 ## Mô hình dữ liệu
@@ -234,7 +223,7 @@ Customer gọi API admin nhận HTTP 403; thiếu hoặc sai token nhận HTTP 4
 
 Năm màn hình: **Auth** (đăng ký/đăng nhập), **Hồ sơ & KYC** (nộp hồ sơ, xem trạng thái, tạo ví), **Chuyển tiền** (DIRECT/PATH, trustline, tra cứu theo ID), **Dashboard** (ví, số dư, phí mạng, tỷ giá tham chiếu, lịch sử, link Explorer) và **Admin** (duyệt/từ chối KYC, Thử AML, bảng lượt AML bị từ chối). Phía dưới trang có trạng thái kết nối Backend, Database và Stellar.
 
-Giao diện theo design system warm-editorial trong `.agents/skills/references/DESIGN.md`: nền cream, tiêu đề serif, nút CTA màu coral, thẻ nền tối cho dữ liệu on-chain. Dùng CSS thường, không dùng thư viện UI.
+Giao diện theo phong cách warm-editorial: nền cream, tiêu đề serif, nút CTA màu coral, thẻ nền tối cho dữ liệu on-chain. Dùng CSS thường, không dùng thư viện UI.
 
 ## Cài đặt
 
@@ -299,7 +288,7 @@ Từ bản mã nguồn mới:
 3. Chạy `npm --prefix backend run stellar:bootstrap` để tạo ví hệ thống và phát hành hai tài sản. Trong **Chuyển tiền**, tạo trustline VNDDEMO cho Alice và cả VNDDEMO/USDDEMO cho Bob.
 4. Chạy `npm --prefix backend run stellar:fund-alice`. Alice dùng **DIRECT** gửi `50000` VNDDEMO vào địa chỉ ví Bob.
 5. Chạy `npm --prefix backend run stellar:offer`. Alice dùng **PATH** gửi `250000` VNDDEMO, đặt **USDDEMO tối thiểu** là `9.9`.
-6. Mở **Dashboard** của Alice để kiểm tra trạng thái, hash và phí. Đăng nhập Bob để xem số dư. Dùng admin thử AML hoặc xem các ca lỗi đã được ghi nhận trong tài liệu nghiệm thu.
+6. Mở **Dashboard** của Alice để kiểm tra trạng thái, hash và phí. Đăng nhập Bob để xem số dư. Dùng admin để thử AML và xem các lượt bị từ chối.
 
 ### Tài khoản seed
 
@@ -363,7 +352,7 @@ Nghiệm thu khi đăng ký/đăng nhập và duyệt/từ chối hoạt động
 2. Mở hai link giao dịch từ CLI. Giao dịch `changeTrust` do **distributor** ký để tạo trustline cho `VNDDEMO` và `USDDEMO`. Giao dịch `payment` do **issuer** ký, gửi **5.000.000 VNDDEMO** và **1.000 USDDEMO** vào distributor. `marketMaker` có XLM Testnet từ Friendbot ở Phase này.
 3. Chạy lại lệnh bootstrap. Hai hash phải giữ nguyên. Nếu Horizon chưa xác nhận, lệnh lưu giao dịch đã ký với trạng thái `PENDING` và lần chạy lại tra cứu hoặc gửi lại đúng giao dịch đó. Nếu giao dịch hết hạn và Horizon vẫn chưa xác định được kết quả, bootstrap dừng để tránh phát hành trùng.
 4. Đăng nhập customer đã `APPROVED`, vào **Hồ sơ & KYC → Tạo ví Testnet**. Mở public key được hiển thị để xem ví trên Explorer. Bấm **Kiểm tra lại ví Testnet** phải trả cùng địa chỉ. Customer chưa được duyệt sẽ bị API trả HTTP 403.
-5. Trong pgAdmin hoặc psql, chạy `SELECT email, stellar_public_key FROM users ORDER BY id;` để đối chiếu public key của Alice/Bob. Kết quả và link giao dịch của lần chạy Phase 3 nằm trong `PROJECT_PROGRESS.md`.
+5. Trong pgAdmin hoặc psql, chạy `SELECT email, stellar_public_key FROM users ORDER BY id;` để đối chiếu public key của Alice/Bob.
 
 Secret key được lưu local trong `backend/.secrets/stellar-wallets.json`. Thư mục `.secrets/` đã được Git bỏ qua. Giữ kho này cùng cấu hình PostgreSQL khi chạy lại.
 
@@ -441,7 +430,7 @@ Lần đầu, market maker ký trustlines của hai tài sản rồi Distributor
 3. Khi offer đang mở, thử `destMin: "10.1"` với số tiền gửi `250000`. Kết quả phải là `FAILED / DEST_MIN`. Dùng yêu cầu mới với `destMin: "9.9"` để kiểm tra ca thành công. Giao dịch thất bại đã được Stellar ghi vào ledger có thể có hash và phí XLM. Số dư VNDDEMO/USDDEMO giữ nguyên trong hai ca lỗi.
 4. Ca thành công phải hiện `CONFIRMED`, số USDDEMO thực nhận, phí XLM và link Explorer. Nếu thấy `PENDING`, dùng nút **Kiểm tra yêu cầu gửi** hoặc gọi `GET /api/transfers/:id`. Mở tài khoản Bob để đối chiếu số dư USDDEMO từ Horizon.
 
-Chạy các ca lỗi trước giao dịch thành công để giữ đủ VNDDEMO cho cùng kịch bản. Luồng DIRECT và PATH dùng chung giới hạn AML theo tài khoản. Kết quả và ID để tra cứu của lần kiểm tra Phase 5 nằm trong `PROJECT_PROGRESS.md`.
+Chạy các ca lỗi trước giao dịch thành công để giữ đủ VNDDEMO cho cùng kịch bản. Luồng DIRECT và PATH dùng chung giới hạn AML theo tài khoản.
 
 Với dữ liệu đã nghiệm thu, đăng nhập `alice-path@globalremit.test` bằng mật khẩu demo `12345678` và mở **Dashboard** hoặc **Tra cứu** ID `12` để xem giao dịch đã gửi 10 USDDEMO cho Bob. ID `10` là ca thiếu thanh khoản và ID `11` là ca không đạt mức tối thiểu. Tài khoản Alice thường đã đủ ba lượt trong cửa sổ AML lúc kiểm tra, nên dùng một ví demo riêng cho ca thành công.
 
@@ -455,13 +444,13 @@ Mở [localhost:5173](http://localhost:5173/) sau khi chạy PostgreSQL, backend
 4. Nhấn **Ctrl+R** trong cùng tab. Phiên còn hạn và dữ liệu Dashboard được tải lại. Đăng nhập một customer khác để kiểm tra lịch sử của người gửi không xuất hiện ở tài khoản đó.
 5. Đăng nhập admin để duyệt hoặc từ chối KYC, thử AML và xem bảng các lượt AML bị từ chối.
 
-Trên dữ liệu đã nghiệm thu, đăng nhập `phase6@globalremit.test` / `12345678` rồi mở **Dashboard** để xem DIRECT `#13` và PATH `#14`. Bob hiện có **11 USDDEMO** sau lượt gửi thử Phase 6. Các địa chỉ ví và hash kiểm chứng nằm trong `PROJECT_PROGRESS.md`.
+Trên dữ liệu đã nghiệm thu, đăng nhập `phase6@globalremit.test` / `12345678` rồi mở **Dashboard** để xem DIRECT `#13` và PATH `#14`. Bob hiện có **11 USDDEMO** sau lượt gửi thử Phase 6.
 
 ## Khôi phục bộ dữ liệu khi Stellar Testnet reset
 
 Nếu Testnet reset, các hash cũ có thể biến mất. Xác nhận reset trước khi chuẩn bị một bộ dữ liệu demo mới, và giữ bản sao kho khóa cũ ở vị trí riêng tư.
 
-Giữ bản sao cũ và ảnh minh chứng. Chuẩn bị một bản mã nguồn sạch, tạo một database demo mới trên PostgreSQL và trỏ `DATABASE_URL` trong `backend/.env` của bản mới vào database đó. Nếu tiếp tục dùng container PostgreSQL hiện tại, chạy lệnh sau từ thư mục đã dùng để khởi động container, với tên database chưa tồn tại:
+Giữ bản sao database và kho khóa cũ. Chuẩn bị một bản mã nguồn sạch, tạo một database demo mới trên PostgreSQL và trỏ `DATABASE_URL` trong `backend/.env` của bản mới vào database đó. Nếu tiếp tục dùng container PostgreSQL hiện tại, chạy lệnh sau từ thư mục đã dùng để khởi động container, với tên database chưa tồn tại:
 
 ```sh
 docker compose exec db psql -U globalremit -d postgres -c "CREATE DATABASE globalremit_demo_reset"
@@ -477,9 +466,3 @@ Bản mới bắt đầu với kho `backend/.secrets/` trống. Dừng backend v
 - **Không realtime:** dữ liệu cập nhật bằng tải lại trang hoặc nút tải lại.
 - KYC chỉ là form giả, AML chỉ có 3 luật đơn giản, chỉ hai tài sản demo.
 - Hướng phát triển: tỷ giá/thanh khoản động, nhiều offer, cập nhật realtime, lưu khóa an toàn, KYC/AML thật.
-
-## Tài liệu nộp bài
-
-- [Test matrix T01–T13, bảng YC01–YC08, ảnh và hash Explorer](docs/evidence.md)
-- [Đề cương báo cáo tiếng Việt theo Chapter 5 và 9](docs/report-outline.md)
-- [Tiến độ và kết quả theo phase](PROJECT_PROGRESS.md)
