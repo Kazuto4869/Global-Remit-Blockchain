@@ -43,11 +43,6 @@ export default function Auth({ onLogin, expired }) {
             {register ? 'Về đăng nhập' : 'Tạo tài khoản demo'}
           </button>
         </p>
-        {!register && (
-          <p className="demo-accounts">
-            Tài khoản seed: <code>alice@</code>, <code>bob@</code>, <code>admin@globalremit.test</code> · mật khẩu <code>12345678</code>
-          </p>
-        )}
       </section>
     </div>
   )

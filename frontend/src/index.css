@@ -99,8 +99,6 @@ input:focus, select:focus { outline: none; border-color: var(--color-primary); b
 .auth form { margin-top: var(--gap-lg); }
 .auth form button { width: 100%; justify-self: stretch; }
 .auth-switch { margin: var(--gap-lg) 0 0; font-size: 14px; color: var(--color-muted); }
-.demo-accounts { margin: 12px 0 0; font-size: 13px; color: var(--color-muted); }
-.demo-accounts code { font-family: var(--font-mono); font-size: 12px; }
 
 /* ---------- Nút ---------- */
 button { display: inline-flex; align-items: center; justify-content: center; justify-self: start; height: 40px; padding: 0 20px; border: 1px solid transparent; border-radius: var(--radius); background: var(--color-primary); color: #fff; font: 500 14px/1 var(--font-body); cursor: pointer; }
